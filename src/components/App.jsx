@@ -37,7 +37,7 @@ const App = () => {
         const { data } = await searchPhoto(search, page);
         
         setGallery(prevGallery => data.hits?.length ? [...prevGallery, ...data.hits] : prevGallery);
-        setTotalHits(data.totalHits || totalHits);
+        setTotalHits(data.totalHits);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -49,7 +49,7 @@ const App = () => {
       fetchData();
     }
     
-  }, [search, page, totalHits]);
+  }, [search, page]);
 
 
 
