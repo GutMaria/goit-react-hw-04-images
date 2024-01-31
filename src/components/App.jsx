@@ -30,15 +30,13 @@ const App = () => {
   }
 
   useEffect(() => {
-    if (!search) return;
-    
     const fetchData = async () => {
-      setLoading(true);
+      
       try {
+        setLoading(true);
         const { data } = await searchPhoto(search, page);
-        if (data.hits?.length) {
-          setGallery((prevGallery) => [...prevGallery, ...data.hits]);
-        }
+        
+        setGallery(prevGallery => data.hits?.length ? [...prevGallery, ...data.hits] : prevGallery);
         setTotalHits(data.totalHits || totalHits);
       } catch (error) {
         setError(error.message);
@@ -47,7 +45,10 @@ const App = () => {
       }
     };
 
-    fetchData();
+    if (search) {
+      fetchData();
+    }
+    
   }, [search, page, totalHits]);
 
 
@@ -64,7 +65,8 @@ const App = () => {
     >
         <Searchbar onSubmit={addSearch}></Searchbar>
         <ImageGallery items={gallery} />
-        {loading&&<Loader/>}
+        {loading && <Loader />}
+        {error && alert('Упс щось пішло не так, спробуйте ще')}
         {Boolean(gallery.length) && page < Math.ceil(totalHits / 12) && <Button onClick={loadMore } />}
     </div>
   );
